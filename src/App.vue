@@ -11,9 +11,12 @@
       <input v-model="lifeGoal" name="lifeGoal">
       <button>Toevoegen</button>
   </form>
+  <button @click="removeAllGoals">Alle goals verwijderen ('New year, new me' gevalletje?)</button>
+  <button @click="markAllDone">Alles afstrepen (Je hebt blijkbaar geen doelen meer in je leven)</button>
   <ul>
-    <li v-for="goal in goals" :key="todo.id">
-      <h3 @click="toggleDone(goal)">{{goal.content}}</h3>
+    <li v-for="(goal, index) in goals" :key="todo.id" class="goal">
+      <h3 :class="{ done: goal.done }" @click="toggleDone(goal)">{{goal.content}}</h3>
+      <button @click="removeGoal(index)">X</button>
     </li>
   </ul>
 </template>
@@ -46,11 +49,25 @@ export default {
       goal.done = !goal.done;
     }
 
+    function removeGoal(index){
+      goals.value.splice(index, 1);
+    }
+
+    function markAllDone(){
+      goals.value.forEach((goal) => goal.done = true);
+    }
+
+    function removeAllGoals(){
+      goals.value = [];
+    }
+
     return {
       goals,
       lifeGoal,
       voegLifeGoal,
       toggleDone,
+      removeGoal,
+      markAllDone,
     };
 
   }
@@ -65,6 +82,10 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.goal{
+  cursor: pointer;
 }
 
 .done{
